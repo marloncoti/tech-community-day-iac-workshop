@@ -43,10 +43,13 @@ import pulumi
 import pulumi_aws as aws
 
 
-ami = aws.get_ami(
-    most_recent="true",
-    owners=["137112412989"],
-    filters=[{"name": "name", "values": ["amzn-ami-hvm-*-x86_64-ebs"]}],
+ami = aws.ec2.get_ami(
+    owners=['amazon'],
+    most_recent=True,
+    filters=[aws.ec2.GetAmiFilterArgs(
+        name='name',
+        values=['amzn2-ami-hvm-*-x86_64-gp2'],
+    )],
 )
 
 vpc = aws.ec2.get_vpc(default=True)

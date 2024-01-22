@@ -16,10 +16,14 @@ import pulumi_aws as aws
 Now dynamically query the Amazon Linux machine image. Doing this in code avoids needing to hard-code the machine image (a.k.a., its AMI):
 
 ```python
-ami = aws.get_ami(
-    most_recent="true",
-    owners=["137112412989"],
-    filters=[{"name":"name","values":["amzn-ami-hvm-*-x86_64-ebs"]}])
+ami = aws.ec2.get_ami(
+    owners=['amazon'],
+    most_recent=True,
+    filters=[aws.ec2.GetAmiFilterArgs(
+        name='name',
+        values=['amzn2-ami-hvm-*-x86_64-gp2'],
+    )],
+)
 ```
 
 We also need to grab the default vpc that is available in our AWS account:
@@ -76,10 +80,13 @@ import pulumi
 import pulumi_aws as aws
 
 
-ami = aws.get_ami(
-    most_recent="true",
-    owners=["137112412989"],
-    filters=[{"name": "name", "values": ["amzn-ami-hvm-*-x86_64-ebs"]}],
+ami = aws.ec2.get_ami(
+    owners=['amazon'],
+    most_recent=True,
+    filters=[aws.ec2.GetAmiFilterArgs(
+        name='name',
+        values=['amzn2-ami-hvm-*-x86_64-gp2'],
+    )],
 )
 
 vpc = aws.ec2.get_vpc(default=True)

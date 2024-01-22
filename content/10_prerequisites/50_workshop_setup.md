@@ -31,7 +31,7 @@ After installing the CLI, verify that it is working:
  
 ```bash
 $ pulumi version
-v2.8.0
+v3.102.0
 ```
 If the Pulumi command isn't recognized yet, You should close and relaunch the terminal window first.
 
