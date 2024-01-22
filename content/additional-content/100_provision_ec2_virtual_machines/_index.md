@@ -12,3 +12,4 @@ In this lab, you'll first create a single EC2 virtual machine (VM). Afterwards, 
 zone in your region, and then add a load balancer to spread load across the entire fleet.
 
 {{% children showhidden="false" %}}
+{{% /children %}}

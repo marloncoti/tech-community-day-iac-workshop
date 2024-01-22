@@ -12,3 +12,5 @@ Only complete this section if you are running the workshop on your own. If you a
 {{% /notice %}}
 
 {{% children %}}
+
+{{% /children %}}

@@ -11,3 +11,4 @@ weight = 110
 In this lab, you will deploy a containerized application to an AWS ECS cluster.
 
 {{% children showhidden="false" %}}
+{{% /children %}}
