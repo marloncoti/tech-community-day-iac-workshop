@@ -9,13 +9,14 @@ weight: 25
 ## Learning Objectives
 
 - Getting started with Pulumi
-- Deploy a website on Amazon S3 (pulumi basics)
-- Deploy load balanced Amazon EC2 Instances and an Application Load Balancer 
+- Deploy a website on Amazon S3 (First stack)
+- Deploy Web Server using Amazon Ec2 (Parametrization and Configurations)
+- Deploy a well architected VPC (Manage Package Providers)
 - version control and CICD pulumi projects
 
 {{% notice info %}}
-In this workshop, we have selected containers and various other technologies to demonstrate the strength of IaC.
-At the end of the workshop you can continue to the additional content section, where you can find more labs to explore other components to work with such as serverless and EC2.
+In this workshop, we have selected  Common resources for AWS to demonstrate the strength of IaC.
+At the end of the workshop you can continue to the additional examples, where you can find more labs to explore other components to work with such as serverless and EC2.  here [Pulumi Examples](!https://github.com/pulumi/examples/tree/master)
 {{% /notice %}}
 
 {{% notice warning %}}

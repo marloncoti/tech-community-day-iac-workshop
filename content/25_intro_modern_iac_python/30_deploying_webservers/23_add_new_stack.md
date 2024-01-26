@@ -1,5 +1,5 @@
 +++
-title = "2.4  Add new Stack"
+title = "2.3 Add new staging Stack"
 chapter = false
 weight = 20
 +++
@@ -33,7 +33,7 @@ staging*  n/a             n/a             https://app.pulumi.com/tcd2024-iac/lab
 ```
 ### Select a stack
 
-The top-level `pulumi` operations `config`, `preview`, `update` and `destroy` operate on the active stack. To change the active stack, run `pulumi stack select`.
+When we run a Pulumi command (such as config, up, or destroy), the command operates on the active stack. But what if we want to change which stack is active? For this task, we use the pulumi stack select command:
 
 ```bash
 $pulumi stack select dev
@@ -43,7 +43,7 @@ dev*     20 minutes ago  5               https://app.pulumi.com/tcd2024-iac/lab-
 staging  n/a             n/a             https://app.pulumi.com/tcd2024-iac/lab-01/staging
 
 ```
-
+Notice that `dev` is now the active stack.
 
 ### View stack resources
 To view details of the currently selected stack, run pulumi stack with no arguments. This displays the metadata, resources and output properties associated with the stack.

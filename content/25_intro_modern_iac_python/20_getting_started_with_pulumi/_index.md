@@ -1,5 +1,5 @@
 +++
-title = "Module 01: S3 Website"
+title = "Module 01: S3 Website - First Stack"
 chapter = true
 weight = 20
 +++

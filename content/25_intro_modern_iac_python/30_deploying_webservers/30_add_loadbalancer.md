@@ -1,209 +1,52 @@
 +++
-title = "2.4 Add a LoadBalancer"
+title = "2.5 Deploy staging new Stack"
 chapter = false
-weight = 30
+weight = 25
 +++
 
-Needing to loop over the webservers isn't very realistic. You will now create a load balancer over them to distribute load evenly.
+Now our project uses stack references,  We are ready to deploy to a new environment 
 
-## Step 1 &mdash; Update our Security Group 
+## Step 1 &mdash; change to the staging stack created previously
 
-We need to add an egress rule to our security group. Whenever you add a listener to your load balancer or update the health check port for a
-target group used by the load balancer to route requests, you must verify that the security groups associated with the load balancer allow 
-traffic on the new port in both directions.
-
-```python
-...
-group = aws.ec2.SecurityGroup(
-    "web-secgrp",
-    ingress=[
-        { 'protocol': 'icmp', 'from_port': 8, 'to_port': 0, 'cidr_blocks': ['0.0.0.0/0'] },
-        { 'protocol': 'tcp', 'from_port': 80, 'to_port': 80, 'cidr_blocks': ['0.0.0.0/0'] },
-    ],
-    egress=[
-        { 'protocol': 'tcp', 'from_port': 80, 'to_port': 80, 'cidr_blocks': ['0.0.0.0/0'] },
-    ]
-)
-...
+remember , to see project stacks we can run the command 
+```bash
+pulumi stack ls 
 ```
 
-This is required to ensure the security group ingress rules don't conflict with the load balancer's.
+to switch the project stack we can run the following command. 
 
-## Step 2 &mdash; Define the ALB
+```bash
+$ pulumi stack select staging 
 
-Now right after the security group creation, and before the EC2 creation block, add the load balancer creation steps:
-
-```python
-...
-vpc = aws.ec2.get_vpc(default=True)
-vpc_subnets = aws.ec2.get_subnets(filters=[{"name": "vpc-id", "values": [vpc.id]}])
-
-lb = aws.lb.LoadBalancer(
-    "loadbalancer",
-    internal=False,
-    security_groups=[group.id],
-    subnets=vpc_subnets.ids,
-    load_balancer_type="application",
-)
-
-target_group = aws.lb.TargetGroup(
-    "target-group", port=80, protocol="HTTP", target_type="ip", vpc_id=vpc.id
-)
-
-listener = aws.lb.Listener(
-    "listener",
-    load_balancer_arn=lb.arn,
-    port=80,
-    default_actions=[{"type": "forward", "target_group_arn": target_group.arn}],
-)
-...
+NAME      LAST UPDATE  RESOURCE COUNT  URL
+dev       n/a          n/a             https://app.pulumi.com/marloncoti/iac-workshop-webservers/dev
+staging*  n/a          n/a             https://app.pulumi.com/marloncoti/iac-workshop-webservers/staging
 ```
 
-Here, we've defined the ALB, its TargetGroup and some Listeners, but we haven't actually added the EC2 instances to the ALB. 
 
-## Step 3 &mdash; Add the Instances to the ALB
+## Step 2 Set the stack references values for staging stack 
 
-Replace the EC2 creation block with the following:
+Set the  instance_size, instance_count and ami  configuration variables using the pulumi commnad.   `pulumi config set`
+execute the following commands
 
-```python
-...
-ips = []
-hostnames = []
-for az in aws.get_availability_zones().names:
-    server = aws.ec2.Instance(f'web-server-{az}',
-      instance_type="t2.micro",
-      security_groups=[group.name],
-      ami=ami.id,
-      user_data="""#!/bin/bash
-echo \"Hello, World -- from {}!\" > index.html
-nohup python -m SimpleHTTPServer 80 &
-""".format(az),
-      availability_zone=az,
-      tags={
-          "Name": "web-server",
-      },
-    )
-    ips.append(server.public_ip)
-    hostnames.append(server.public_dns)
 
-    attachment = aws.lb.TargetGroupAttachment(f'web-server-{az}',
-        target_group_arn=target_group.arn,
-        target_id=server.private_ip,
-        port=80,
-    )
+```bash 
+    pulumi config set instance_size t3.micro # 
+    pulumi config set instance_count 2
+    pulumi config set ami amzn2-ami-hvm-*-x86_64-ebs
 
-export('ips', ips)
-export('hostnames', hostnames)
-export("url", lb.dns_name)
 ```
 
-> :white_check_mark: After this change, your `__main__.py` should look like this:
+So in practice different environments generally are  deployed on different aws accounts, in this workshp we'll use a different region to deploy our staging environment. 
 
-```python
-"""An AWS Python Pulumi program"""
+set the default aws-region for the staging environment.
 
-import pulumi
-import pulumi_aws as aws
-
-
-ami = aws.ec2.get_ami(
-    owners=['amazon'],
-    most_recent=True,
-    filters=[aws.ec2.GetAmiFilterArgs(
-        name='name',
-        values=['amzn2-ami-hvm-*-x86_64-gp2'],
-    )],
-)
-
-vpc = aws.ec2.get_vpc(default=True)
-vpc_subnets = aws.ec2.get_subnets(filters=[{"name": "vpc-id", "values": [vpc.id]}])
-
-group = aws.ec2.SecurityGroup(
-    "web-secgrp",
-    description="Enable HTTP Access",
-    vpc_id=vpc.id,
-    ingress=[
-        {
-            "protocol": "icmp",
-            "from_port": 8,
-            "to_port": 0,
-            "cidr_blocks": ["0.0.0.0/0"],
-        },
-        {
-            "protocol": "tcp",
-            "from_port": 80,
-            "to_port": 80,
-            "cidr_blocks": ["0.0.0.0/0"],
-        },
-    ],
-    egress=[
-        {
-            "protocol": "tcp",
-            "from_port": 80,
-            "to_port": 80,
-            "cidr_blocks": ["0.0.0.0/0"],
-        }
-    ],
-)
-
-lb = aws.lb.LoadBalancer(
-    "loadbalancer",
-    internal=False,
-    security_groups=[group.id],
-    subnets=vpc_subnets.ids,
-    load_balancer_type="application",
-)
-
-target_group = aws.lb.TargetGroup(
-    "target-group", port=80, protocol="HTTP", target_type="ip", vpc_id=vpc.id
-)
-
-listener = aws.lb.Listener(
-    "listener",
-    load_balancer_arn=lb.arn,
-    port=80,
-    default_actions=[{"type": "forward", "target_group_arn": target_group.arn}],
-)
-
-
-ips = []
-hostnames = []
-
-for az in aws.get_availability_zones().names:
-    server = aws.ec2.Instance(
-        f"web-server-{az}",
-        instance_type="t2.micro",
-        vpc_security_group_ids=[group.id],
-        ami=ami.id,
-        user_data="""#!/bin/bash
-echo \"Hello, World -- from {}!\" > index.html
-nohup python -m SimpleHTTPServer 80 &
-""".format(
-            az
-        ),
-        tags={
-            "Name": "web-server",
-        },
-    )
-    ips.append(server.public_ip)
-    hostnames.append(server.public_dns)
-
-    attachment = aws.lb.TargetGroupAttachment(
-        f"web-server-{az}",
-        target_group_arn=target_group.arn,
-        target_id=server.private_ip,
-        port=80,
-    )
-
-
-pulumi.export("ips", ips)
-pulumi.export("hostnames", hostnames)
-pulumi.export("url", lb.dns_name)
+```bash 
+    pulumi config set aws:region us-east-2 # 
 ```
 
-This is all the infrastructure we need for our load balanced webserver. Let's apply it.
-
-## Step 4 &mdash; Deploy your Changes
+That's it,  Now we can deploy our new environment.
+Notice that the main code did not change
 
 Deploy these updates:
 
@@ -211,42 +54,37 @@ Deploy these updates:
 pulumi up
 ```
 
-This should result in a fairly large update and, if all goes well, the load balancer's resulting endpoint URL:
+Notice that  new resources are being identified with the corresponding stack `lab-01-staging-wb-sg`
 
-```
-Updating (dev):
+```bash
+Previewing update (staging)
 
-     Type                             Name                      Status
-     pulumi:pulumi:Stack              python-testing-dev        created
-~    ├─ aws:ec2:SecurityGroup         web-secgrp                updated     [diff: ~ingress, ~egress]
- +   ├─ aws:lb:TargetGroup            target-group              created
- +   ├─ aws:lb:LoadBalancer           external-loadbalancer     created
- +   ├─ aws:lb:TargetGroupAttachment  web-server-us-west-2a        created     
- +   ├─ aws:lb:TargetGroupAttachment  web-server-us-west-2c        created     
- +   ├─ aws:lb:TargetGroupAttachment  web-server-us-west-2d        created     
- +   └─ aws:lb:TargetGroupAttachment  web-server-us-west-2b        created    
- +   └─ aws:lb:Listener               listener                  created
+View in Browser (Ctrl+O): https://app.pulumi.com/tcd2024-iac/lab-01/staging/previews/0242505b-f2a1-408d-b367-27c10b0f031b
+
+     Type                      Name                         Plan       
+ +   pulumi:pulumi:Stack       lab-01-staging               create     
+ +   ├─ aws:ec2:SecurityGroup  lab-01-staging-wb-sg         create     
+ +   ├─ aws:ec2:Instance       lab-01-staging-ec2-server-0  create     
+ +   └─ aws:ec2:Instance       lab-01-staging-ec2-server-1  create     
 
 Outputs:
-    hostnames: [
-        [0]: "ec2-18-197-184-46.us-west-2.compute.amazonaws.com"
-        [1]: "ec2-18-196-225-191.us-west-2.compute.amazonaws.com"
-        [2]: "ec2-35-158-83-62.us-west-2.compute.amazonaws.com"
+    instance_ids       : [
+        [0]: output<string>
+        [1]: output<string>
     ]
-    ips      : [
-        [0]: "18.197.184.46"
-        [1]: "18.196.225.191"
-        [2]: "35.158.83.62"
-  + url      : "web-traffic-09348bc-723263075.us-west-2.elb.amazonaws.com"
+    instance_public_dns: [
+        [0]: output<string>
+        [1]: output<string>
+    ]
+    instance_public_ips: [
+        [0]: output<string>
+        [1]: output<string>
+    ]
 
 Resources:
-    + 7 created
-    ~ 1 updated
-    8 changes. 4 unchanged
+    + 4 to create
 
-Duration: 2m33s
-
-Permalink: https://app.pulumi.com/jaxxstorm/iac-workshop/dev/updates/3
+Do you want to perform this update? yes
 ```
 
 ## Step 5 &mdash; Verify 

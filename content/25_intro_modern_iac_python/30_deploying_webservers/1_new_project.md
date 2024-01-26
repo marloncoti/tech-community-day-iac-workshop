@@ -1,5 +1,5 @@
 +++
-title = "2.1 Creating a New Project"
+title = "2.1 Creating a New Project dev Stack"
 chapter = false
 weight = 1
 +++
@@ -27,6 +27,8 @@ A Pulumi project is just a directory with some files in it. It's possible for yo
 ```bash
 pulumi new aws-python -y
 ```
+Notice that we are using the  aws-python template, A full list of available Pulumi  templates can be found here [Pulumi Templates](!https://github.com/pulumi/templates)
+
 
 This will print output similar to the following with a bit more information and status as it goes:
 
@@ -68,10 +70,10 @@ pulumi.export('bucket_name', bucket.id)
 
 Feel free to explore the other files, although we won't be editing any of them by hand.
 
-## Step 4 &mdash; Configure an AWS Region
+## Step 4 &mdash; Configure an AWS Region (If We deploy on different region)
 
 Configure the AWS region you would like to deploy to:
 
 ```bash
-pulumi config set aws:region us-west-2
+pulumi config set aws:region us-east-1
 ```
