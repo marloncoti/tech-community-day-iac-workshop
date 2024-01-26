@@ -1,5 +1,5 @@
 ---
-title: "Intro to Modern IaC with AWS & Pulumi (Python)"
+title: "Workshop Modern IaC with AWS & Pulumi (Python)"
 chapter: true
 weight: 25
 ---
@@ -9,9 +9,9 @@ weight: 25
 ## Learning Objectives
 
 - Getting started with Pulumi
-- Deploy a website on Amazon S3
-- Deploy load balanced Amazon EC2 Instances and an Application Load Balancer
-- Deploy an application on Amazon ECS on AWS Fargate
+- Deploy a website on Amazon S3 (pulumi basics)
+- Deploy load balanced Amazon EC2 Instances and an Application Load Balancer 
+- version control and CICD pulumi projects
 
 {{% notice info %}}
 In this workshop, we have selected containers and various other technologies to demonstrate the strength of IaC.

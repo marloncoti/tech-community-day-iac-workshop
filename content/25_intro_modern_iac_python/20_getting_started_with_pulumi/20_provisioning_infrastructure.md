@@ -12,7 +12,7 @@ Add the following to your `__main__.py` file:
 
 ```python
 bucket = aws.s3.Bucket(
-    "my-website-bucket",
+    "my-website-bucket-mcoti",
     aws.s3.BucketArgs(
         website=aws.s3.BucketWebsiteArgs(
             index_document="index.html"
@@ -30,7 +30,7 @@ import pulumi
 import pulumi_aws as aws
 
 aws.s3.Bucket(
-    "my-website-bucket",
+    "my-website-bucket-mcoti",
     aws.s3.BucketArgs(
         website=aws.s3.BucketWebsiteArgs(
             index_document="index.html"

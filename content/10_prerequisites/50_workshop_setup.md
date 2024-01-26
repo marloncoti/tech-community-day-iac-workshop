@@ -102,6 +102,27 @@ $ docker --version
 Docker version 19.03.1, build 74b1e89
 ```
 
+
+## Python
+
+If you are not running this workshop from Cloud9 you will need to install Python. 
+You will need Python 3.10 or later to run pulumi programs written in [Python](https://www.python.org/). 
+
+Install your desired LTS version from [the Python download page](https://www.python.org/downloads/) 
+
+After installing, verify that Node.js is working:
+
+```bash
+$ python --version
+Python 3.10.11
+```
+
+Also verify that the Node Package Manager (NPM) is working:
+
+```bash
+$ pip --version
+pip 23.0.1 from /Library/Frameworks/Python.framework/Versions/3.10/lib/python3.10/site-packages/pip (python 3.10)
+```
 ## Kubectl
 
 If you will be completing the Kubernetes labs, [install the kubectl CLI](https://kubernetes.io/docs/tasks/tools/install-kubectl/). It isn't necessary to configure it to speak to a cluster &mdash; you will do that during the appropriate labs that require it.
