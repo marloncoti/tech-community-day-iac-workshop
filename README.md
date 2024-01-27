@@ -11,7 +11,7 @@ This site is built with Hugo, so you'll need it [installed](https://gohugo.io/ge
 First, clone this repo:
 
 ```bash
-git clone git@github.com:aws-samples/aws-modernization-with-pulumi.git
+git clone https://github.com/marloncoti/tech-community-day-iac-workshop-guide.git
 ```
 
 Ensure you've also cloned the submodules:
@@ -30,7 +30,9 @@ hugo server
 ### Learning Objectives
 
 - Getting started with Pulumi
-- Deploy AWS EC2 Compute Infrastructure
-- Deploy AWS ECS Infrastructure
-- Deploy AWS EKS Clusters
-- Deploy applications to AWS EKS Cluster
+- Deploy a website on Amazon S3 (First stack, package providers)
+- Deploy Web Server using Amazon Ec2 (Understanding Stacks , Stack References)
+- version control and CICD for pulumi projects
+
+
+
