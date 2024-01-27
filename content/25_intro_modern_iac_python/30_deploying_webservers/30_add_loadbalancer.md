@@ -33,7 +33,7 @@ execute the following commands
 ```bash 
     pulumi config set instance_size t3.micro # 
     pulumi config set instance_count 2
-    pulumi config set ami amzn2-ami-hvm-*-x86_64-ebs
+    pulumi config set ami 'amzn2-ami-hvm-*-x86_64-ebs'
 
 ```
 

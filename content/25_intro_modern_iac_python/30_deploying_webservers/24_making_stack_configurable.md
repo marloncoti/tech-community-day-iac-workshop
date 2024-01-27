@@ -51,7 +51,7 @@ execute the following commands
 ```bash 
     pulumi config set instance_size t2.micro
     pulumi config set instance_count 1
-    pulumi config set ami amzn2-ami-hvm-*-x86_64-ebs
+    pulumi config set ami 'amzn2-ami-hvm-*-x86_64-ebs'
 
 ```
 ### Step 3 - Replace hardcoded values by stack reference values

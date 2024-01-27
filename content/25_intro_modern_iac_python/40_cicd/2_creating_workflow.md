@@ -33,6 +33,7 @@ on:
   push:
     branches:
       - 'main'
+      - 'master'
     paths:
       - 'lab-02/**'
 
@@ -138,6 +139,7 @@ on:
   push:
     branches:
       - 'main'
+      - 'master'
     paths:
       - 'lab-02/**'
 
@@ -175,7 +177,7 @@ jobs:
           comment-on-pr: true
           work-dir: ./lab-02
           command: preview
-          stack-name: prd # When using an individual account, only use stack-name.
+          stack-name: dev # When using an individual account, only use stack-name.
         env:
           PULUMI_ACCESS_TOKEN: ${{ secrets.PULUMI_ACCESS_TOKEN }}
 
