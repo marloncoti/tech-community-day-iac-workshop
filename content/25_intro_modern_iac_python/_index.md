@@ -9,10 +9,9 @@ weight: 25
 ## Learning Objectives
 
 - Getting started with Pulumi
-- Deploy a website on Amazon S3 (First stack)
-- Deploy Web Server using Amazon Ec2 (Parametrization and Configurations)
-- Deploy a well architected VPC (Manage Package Providers)
-- version control and CICD pulumi projects
+- Deploy a website on Amazon S3 (First stack, package providers)
+- Deploy Web Server using Amazon Ec2 (Understanding Stacks , Stack References)
+- version control and CICD for pulumi projects
 
 {{% notice info %}}
 In this workshop, we have selected  Common resources for AWS to demonstrate the strength of IaC.
